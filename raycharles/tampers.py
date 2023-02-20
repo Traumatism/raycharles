@@ -22,3 +22,8 @@ def add_dollar_and_ats(cmd: str) -> str:
 
 def encode_base64(cmd: str) -> str:
     return "bash<<<$(base64 -d<<<%s)" % base64.b64encode(cmd.encode()).decode()
+
+
+def encapsulate_into_curly_braces(cmd: str) -> str:
+    parts = cmd.split()
+    return "{" + ",".join(parts) + "}"

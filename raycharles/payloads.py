@@ -13,6 +13,7 @@ ENDINGS = (">/dev/null", "2>/dev/null")
 
 def build_payloads(
     pre_tampers=[
+        encapsulate_into_curly_braces,
         encode_base64,
     ],
     tampers=[

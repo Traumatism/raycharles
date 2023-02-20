@@ -10,15 +10,16 @@ QUOTE_CHARS           = ("'", '"')
 COMMENT_CHARS         = ("#",)
 SUBSTITUTION_PATTERNS = ("$(%(cmd)s)", "`%(cmd)s`")
 
+IDENTITY_LAMBDA       = lambda x: x
+DEFAULT_TAMPERS       = [IDENTITY_LAMBDA, add_dollar_and_ats, replace_spaces_with_ifs]
+DEFAULT_PRE_TAMPERS   = [IDENTITY_LAMBDA, encapsulate_into_curly_braces, encode_base64]
+
 
 def build_payload_generators(
-    pre_tampers=[encapsulate_into_curly_braces, encode_base64],
-    tampers=[add_dollar_and_ats, replace_spaces_with_ifs],
+    tampers=DEFAULT_TAMPERS,
+    pre_tampers=DEFAULT_PRE_TAMPERS,
 ) -> Generator[PayloadGenerator, None, None]:
     """ Build payload generators """
-
-    tampers.append(lambda x: x)
-    pre_tampers.append(lambda x: x)
 
     for pre_tamper in pre_tampers:
         for tamper in tampers:

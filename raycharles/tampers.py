@@ -33,4 +33,5 @@ def encapsulate_into_curly_braces(cmd: str) -> str:
     """ Encapsulate the command inside curly braces """
 
     parts = cmd.split()
+
     return "{" + ",".join(parts) + "}"

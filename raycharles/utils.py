@@ -3,6 +3,8 @@ import time
 
 
 def detect_parameters(url: str):
+    """ Detect where are the injection entrypoints """
+
     target = [""]
     idx = 0
 

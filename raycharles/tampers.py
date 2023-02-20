@@ -1,3 +1,6 @@
+import base64
+
+
 def replace_spaces_with_ifs(cmd: str) -> str:
     if " " not in cmd:
         return cmd
@@ -15,3 +18,7 @@ def add_dollar_and_ats(cmd: str) -> str:
             final += "$@"
 
     return final[:-2]
+
+
+def encode_base64(cmd: str) -> str:
+    return "bash<<<$(base64 -d<<<%s)" % base64.b64encode(cmd.encode()).decode()

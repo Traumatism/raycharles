@@ -17,7 +17,7 @@ def main() -> int:
 [red]
          _ _      _|_  _  _| _  _
         | (_|\/  (_| |(_|| |(/__\
-            /                   
+             /                   
 [/]
 [bright_black]
 '' 2>/dev/null; echo "[green]Blind RCE fuzzer[/]" #

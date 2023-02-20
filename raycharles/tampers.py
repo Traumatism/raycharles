@@ -6,7 +6,6 @@ def replace_spaces_with_ifs(cmd: str) -> str:
 
 
 def add_dollar_and_ats(cmd: str) -> str:
-
     final = ""
 
     for char in cmd:

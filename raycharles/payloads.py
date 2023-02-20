@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, Callable
 
 from raycharles.tampers import *
 
@@ -30,13 +30,10 @@ ENDINGS = (
 
 def _build_payloads(
     cmd: str,
-    tampers_patterns=[
-        (add_dollar_and_ats, replace_spaces_with_ifs),
-    ],
+    tampers_patterns: list[list[Callable[[str], str]]],
 ) -> Generator[str, None, None]:
     for tampers in tampers_patterns:
         for sp in SUBSTITUTION_PATTERNS:
-
             tampered = sp % {"cmd": cmd}
 
             yield tampered
@@ -130,15 +127,15 @@ def _build_payloads(
 
 def build_payloads(
     cmd: str,
-    tampers_patterns=[
-        (add_dollar_and_ats, replace_spaces_with_ifs),
+    tampers_patterns: list[list[Callable[[str], str]]] = [
+        [replace_spaces_with_ifs],
+        [add_dollar_and_ats],
     ],
 ) -> Generator[str, None, None]:
-
     for tampers in tampers_patterns:
         yield from _build_payloads(cmd, tampers_patterns)
 
         for tamper in tampers:
             cmd = tamper(cmd)
 
-        yield from _build_payloads(cmd, tampers_patterns)
+        yield from _build_payloads(cmd, [])

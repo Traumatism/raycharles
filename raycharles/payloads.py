@@ -27,6 +27,29 @@ def build_payloads(
         for tamper in tampers:
             yield lambda cmd: tamper(pre_tamper(cmd))
 
+            for qc in QUOTE_CHARS:
+                for sp in SUBSTITUTION_PATTERNS:
+                    yield lambda cmd: tamper(qc + sp % {"cmd": pre_tamper(cmd)})
+
+                    for cc in COMMENT_CHARS:
+                        yield lambda cmd: tamper(
+                            qc + sp % {"cmd": pre_tamper(cmd)} + cc
+                        )
+
+                for mc in META_CHARS:
+                    yield lambda cmd: tamper(qc + mc + pre_tamper(cmd))
+
+                    for cc in COMMENT_CHARS:
+                        yield lambda cmd: tamper(qc + mc + pre_tamper(cmd) + cc)
+
+                    for end in ENDINGS:
+                        yield lambda cmd: tamper(qc + end + mc + pre_tamper(cmd))
+
+                        for cc in COMMENT_CHARS:
+                            yield lambda cmd: tamper(
+                                qc + end + mc + pre_tamper(cmd) + cc
+                            )
+
             for sp in SUBSTITUTION_PATTERNS:
                 yield lambda cmd: tamper(sp % {"cmd": pre_tamper(cmd)})
 
@@ -41,18 +64,3 @@ def build_payloads(
 
                     for cc in COMMENT_CHARS:
                         yield lambda cmd: tamper(end + mc + pre_tamper(cmd) + cc)
-
-            for qc in QUOTE_CHARS:
-                for mc in META_CHARS:
-                    yield lambda cmd: tamper(qc + mc + pre_tamper(cmd))
-
-                    for cc in COMMENT_CHARS:
-                        yield lambda cmd: tamper(qc + mc + pre_tamper(cmd) + cc)
-
-                    for end in ENDINGS:
-                        yield lambda cmd: tamper(qc + end + mc + pre_tamper(cmd))
-
-                        for cc in COMMENT_CHARS:
-                            yield lambda cmd: tamper(
-                                qc + end + mc + pre_tamper(cmd) + cc
-                            )

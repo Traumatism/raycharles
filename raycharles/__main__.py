@@ -137,6 +137,7 @@ def main() -> int:
                 continue
 
             spawn_shell(console, session, url, payload_func)
+
             return 0
 
     return 0

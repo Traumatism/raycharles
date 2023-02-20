@@ -5,8 +5,8 @@ import time
 def detect_parameters(url: str):
     """ Detect where are the injection entrypoints """
 
-    target = [""]
     idx = 0
+    target = [""]
 
     for char in url:
         if char == "*":

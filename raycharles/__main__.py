@@ -3,7 +3,7 @@ import time
 
 from raycharles.shell import spawn_shell
 from raycharles.utils import detect_parameters, detect_avg_ping
-from raycharles.payloads import build_payloads
+from raycharles.payloads import build_payload_generators
 
 from argparse import ArgumentParser
 from rich.console import Console
@@ -105,11 +105,10 @@ def main() -> int:
 
     console.log(f"Found average ping: ~ {round(average_ping, 2)}")
 
-    for payload_func in build_payloads():
-        final_url = ""
-
+    for payload_func in build_payload_generators():
         payload = payload_func(f"sleep {sleep_time}")
 
+        final_url = ""
         for part in splitted_url:
             if part == "FUZZ":
                 final_url += payload

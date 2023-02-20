@@ -18,6 +18,9 @@ def detect_parameters(url: str):
 
 
 def detect_avg_ping(session: httpx.Client, url: str, requests: int = 15) -> float:
+    """ Detect the average website response time for a better
+    accuracy with blind injection detection """
+
     times = []
 
     for _ in range(requests):

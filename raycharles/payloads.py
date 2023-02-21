@@ -2,7 +2,8 @@ from typing import Generator, Callable
 
 from raycharles.tampers import *
 
-PayloadGenerator = Callable[[str], str]
+
+PayloadGenerator      = Callable[[str], str]
 
 ENDINGS               = (">/dev/null", "2>/dev/null")
 META_CHARS            = ("&&", "||", "&", "|", ";")
@@ -32,6 +33,20 @@ def build_payload_generators(
                     for cc in COMMENT_CHARS:
                         yield lambda cmd: tamper(
                             qc + sp % {"cmd": pre_tamper(cmd)} + cc
+                        )
+
+                    yield lambda cmd: tamper(sp % {"cmd": pre_tamper(cmd)} + qc)
+
+                    for cc in COMMENT_CHARS:
+                        yield lambda cmd: tamper(
+                            sp % {"cmd": pre_tamper(cmd)} + qc + cc
+                        )
+
+                    yield lambda cmd: tamper(qc + sp % {"cmd": pre_tamper(cmd)} + qc)
+
+                    for cc in COMMENT_CHARS:
+                        yield lambda cmd: tamper(
+                            qc + sp % {"cmd": pre_tamper(cmd)} + qc + cc
                         )
 
                 for mc in META_CHARS:

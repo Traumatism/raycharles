@@ -24,10 +24,9 @@ def spawn_shell(
             final_url = ""
 
             for part in splitted_url:
-                if part == "FUZZ":
-                    final_url += payload
-                else:
-                    final_url += part
+                final_url = (
+                    payload if part == "FUZZ" else part
+                )
 
             session.get(final_url)
 

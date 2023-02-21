@@ -18,6 +18,8 @@ Run the scan:
 
 - `python3 -m raycharles --help`
 
+![](./screenshot2.png)
+
 ## Credits
 
 - https://www.gnu.org/software/bash/manual/bash.html

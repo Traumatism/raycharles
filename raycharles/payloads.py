@@ -23,6 +23,7 @@ def build_payload_generators(
 
     for pre_tamper in pre_tampers:
         for tamper in tampers:
+
             yield lambda cmd: tamper(pre_tamper(cmd))
 
             yield f"Using quote + substitution patterns payloads (tamper={tamper.__name__}, pretamper={pre_tamper.__name__})"

@@ -1,6 +1,10 @@
 import base64
 
 
+def default_tamper(cmd: str) -> str:
+    return cmd
+
+
 def replace_spaces_with_ifs(cmd: str) -> str:
     """ Replace space characters with ${IFS} """
 

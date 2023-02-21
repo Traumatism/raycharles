@@ -10,9 +10,8 @@ def detect_parameters(url: str):
 
     for char in url:
         if char == "*":
+            target.extend(("FUZZ", ""))
             idx += 2
-            target.append("FUZZ")
-            target.append("")
         else:
             target[idx] += char
 
@@ -27,11 +26,8 @@ def detect_avg_ping(session: httpx.Client, url: str, requests: int = 15) -> floa
 
     for _ in range(requests):
         start_time = time.time()
-
         session.get(url)
-
         total_time = time.time() - start_time
-
         times.append(total_time)
 
     return sum(times) / len(times)

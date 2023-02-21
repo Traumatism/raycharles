@@ -7,13 +7,11 @@ def default_tamper(cmd: str) -> str:
 
 def replace_spaces_with_ifs(cmd: str) -> str:
     """ Replace space characters with ${IFS} """
-
     return cmd.replace(" ", "${IFS}")
 
 
 def add_dollar_and_ats(cmd: str) -> str:
     """ Add a $@ after each letter """
-
     final = ""
 
     for char in cmd:

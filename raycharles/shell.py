@@ -19,14 +19,11 @@ def spawn_shell(
     while True:
         try:
             user_input = console.input("raycharles> ")
-            payload = payload_func(user_input)
-
-            final_url = ""
+            payload    = payload_func(user_input)
+            final_url  = ""
 
             for part in splitted_url:
-                final_url = (
-                    payload if part == "FUZZ" else part
-                )
+                final_url += payload if part == "FUZZ" else part
 
             session.get(final_url)
 

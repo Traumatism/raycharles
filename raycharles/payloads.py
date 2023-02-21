@@ -10,7 +10,6 @@ META_CHARS            = ("&&", "||", "&", "|", ";")
 QUOTE_CHARS           = ("'", '"')
 COMMENT_CHARS         = ("#",)
 SUBSTITUTION_PATTERNS = ("$(%(cmd)s)", "`%(cmd)s`")
-
 DEFAULT_TAMPERS: list[PayloadGenerator]     = [default_tamper, add_dollar_and_ats, replace_spaces_with_ifs]
 DEFAULT_PRE_TAMPERS: list[PayloadGenerator] = [default_tamper, encapsulate_into_curly_braces, encode_base64]
 

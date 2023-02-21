@@ -25,7 +25,6 @@ def spawn_shell(
                 final_url += payload if part == "FUZZ" else part
 
             session.get(final_url)
-
             console.log("Request sent!")
         except KeyboardInterrupt:
             return

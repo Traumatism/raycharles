@@ -1,4 +1,3 @@
-
 from httpx import Client
 from rich.console import Console
 

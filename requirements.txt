@@ -6,7 +6,7 @@ h11==0.14.0
 httpcore==0.16.3
 httpx==0.23.3
 idna==3.4
-markdown-it-py==2.1.0
+markdown-it-py==2.2.0
 mdurl==0.1.2
 mypy-extensions==1.0.0
 packaging==23.0
